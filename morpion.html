@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #grid{
+            width: 600px;
+            height: 600px;
+            box-sizing: border-box;
+            display: grid;
+            column-gap: 1em;
+            row-gap: 1em;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            margin: auto;
+        }
+        .cell{
+            border: 1px solid black;
+            border-radius: 0.5rem;
+            font-size: 5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="grid">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+    </div>
+
+    <script>
+        const joueur1 = "X"
+        const joueur2 = "O"
+        let joueurActif = joueur1
+
+        let victory = false
+        let counter = 0
+
+        function checkVictory(){
+            const possibilities = [
+                [0, 1, 2],//lignes
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],//colonnes
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],//diagonales
+                [2, 4, 6]
+            ]
+
+            for(let possibility of possibilities){
+                let pattern = ""
+                for(let index of possibility){
+                    pattern+= cells[index].innerText
+                }
+                if(pattern == joueurActif.repeat(3)){
+                    return true//sortira de la fonction dès qu'une victoire est vérfiée
+                }
+            }
+            //si on arrive à cette ligne de code, c'est qu'aucun return true n'a été déclenché
+            return false
+        }
+
+        const cells = document.querySelectorAll(".cell")
+
+        cells.forEach( (cell, pos) => {
+            cell.addEventListener("click", function(){
+                //la case est vide et personne n'a encore gagné
+                if(cell.innerText == "" && victory == false){
+                    counter++
+                    cell.innerText = joueurActif
+                    
+                    //est ce que quelqu'un a gagné
+                    if(checkVictory() == true){
+                        alert(joueurActif + " a gagné")
+                        victory = true
+                    }           
+                    //sinon, est ce qu'il reste des cases vides    
+                    else if(counter == 9){
+                        alert("Match nul, bande de nuls")
+                    }   
+                    //sinon, c'est que personne n'a gagné ET qu'il reste des cases vides
+                    else{
+                        joueurActif = (joueurActif == joueur1) ? joueur2 : joueur1
+                    }
+                    
+                }
+            })
+        })
+      
+    </script>
+</body>
+</html>
